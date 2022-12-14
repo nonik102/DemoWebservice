@@ -8,7 +8,7 @@ def create_account(username:str, password:str) -> None:
         username (str): passed in username
         password (str): passed in password
     """
-    pass    
+    database_client.create_user(username, password)    
 
 def check_account_is_valid(username:str, password:str) -> bool:
     """check if passed in credentials are valid
@@ -20,5 +20,4 @@ def check_account_is_valid(username:str, password:str) -> bool:
     Returns:
         bool: true if the account is valid, false if not
     """
-    pass
-    
+    return database_client.check_user(username, password)
