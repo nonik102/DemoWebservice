@@ -1,12 +1,17 @@
 from flask import Flask, request, abort
-from markupsafe import escape
+from flask_httpauth import HTTPBasicAuth
 
 import mood_service
 import login_service
 
 app = Flask(__name__)
+auth = HTTPBasicAuth()
 
 special_characters = "!@#$%^&*()-=+/.,<>?\"';:[]{}\|`~"
+
+@auth.verify_password
+def verify_account(username, password):
+    return login_service.check_account_is_valid(username, password)
 
 @app.post("/signup")
 def create_account():
@@ -17,17 +22,19 @@ def create_account():
     if check_special_characters(username) or check_special_characters(password):
         abort(422)
     # check if the account already exists
-    if login_service.check_account_is_valid(username, password):
+    if login_service.check_if_username_exists(username):
         abort(400)
     # call the login service to create the account
     login_service.create_account(username, password)
     return "account created"
 
 @app.get("/")
+@auth.login_required
 def get_mood():
-    pass
+    return mood_service.get_mood(auth.current_user())
 
 @app.post("/")
+@auth.login_required
 def set_mood():
     pass
 
