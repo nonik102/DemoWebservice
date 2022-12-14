@@ -13,12 +13,10 @@ def create_account():
     pass
 
 @app.get("/")
-def set_mood():
-    return f"<p>Hello {escape(name)}!</p>"
+def get_mood():
+    pass
 
 @app.post("/")
-def my_name_is():
-    name = request.form["name"]
-    return {
-        "status": "OK"
-    }
+def set_mood():
+    pass
+
