@@ -1,13 +1,16 @@
 import database_client
 from datetime import datetime, timedelta
 
-def set_mood(mood:str) -> None:
+def set_mood(user:str, mood:str) -> None:
     """set the client's mood to a specific value for today
 
     Args:
+        user (str): the user that is passing in the mood
         mood (str): the mood passed by the user
     """
-    pass
+    date = datetime.today()
+    formatted_date = datetime.strftime(date, "%m/%d/%y")
+    database_client.post_mood_data(user, formatted_date, mood)
 
 def get_mood(user:str) -> dict:
     """get the client's previous mood history along with streak info
@@ -25,7 +28,9 @@ def get_mood(user:str) -> dict:
     streak = get_streak(dates)
     mood_dict = {}
     for date,mood in data:
-        mood_dict[date]=mood
+        if date not in mood_dict:
+            mood_dict[date] = []
+        mood_dict[date].append(mood)
     return {
         "mood_data": mood_dict,
         "streak": streak
@@ -40,7 +45,7 @@ def get_streak(dates: list) -> int:
     Returns:
         int: the current streak length
     """
-    # remove duplicates
+    # remove duplicates (we don't care about duplicates for the streak calcualtion)
     unique_dates = []
     [unique_dates.append(date) for date in dates if date not in unique_dates]
     # transform into datetime objects
@@ -62,3 +67,4 @@ def get_streak(dates: list) -> int:
 if __name__ == "__main__":
     print(get_streak(["12/22/22", "12/23/22", "12/24/22", "12/31/22", "1/1/23"]))
     print(get_mood("a"))
+    set_mood("a", "happy")
