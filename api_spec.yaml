@@ -1,0 +1,144 @@
+openapi: 3.0.3
+info:
+  title: Mood Tracking Webservice
+  description: Demo backend webservice with a REST API
+  contact:
+    email: nm999@drexel.edu
+  version: 1.0.0
+externalDocs:
+  description: Github Link
+  url: https://github.com/nonik102/DemoWebservice/tree/main
+paths:
+  /mood:
+    post:
+      summary: Persist a submitted mood
+      tags:
+        - Mood
+      description: add a mood to today
+      operationId: addMood
+      requestBody:
+        description: Update an existent pet in the store
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                mood:
+                  type: string
+                  example: "happy"
+                  description: mood to submit
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "mood set successfully"
+        '400':
+          description: Invalid Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '422':
+          description: Validation exception
+        '500':
+          description: Internal Server error
+      security:
+        - basic_auth: []
+    get:
+      summary: get a history of submitted mood data
+      tags:
+        - Mood
+      description: add a mood to today
+      operationId: getMood
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoodData'
+        '400':
+          description: Invalid Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '422':
+          description: Validation exception
+        '500':
+          description: Internal Server error
+      security:
+        - basic_auth: []
+  /signup:
+    post:
+      summary: create a user account
+      tags:
+        - Account
+      description: create a user account
+      operationId: createAccount
+      requestBody:
+        description: Create a new user account using the provided details
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "myUsername123"
+                  description: new username
+                password:
+                  type: string
+                  example: "myPassword456"
+                  description: new password
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "account created"
+        '400':
+          description: Invalid Request
+        '404':
+          description: Not Found
+        '422':
+          description: Validation exception
+        '500':
+          description: Internal Server error
+      security:
+        - basic_auth: []
+
+components:
+  schemas:
+    MoodData:
+      type: object
+      description: collection of mood data for a user
+      properties:
+        mood_data:
+          type: object
+          description: all mood data for a user by date
+          properties:
+            date:
+              type: array
+              items:
+                type: string
+              example:
+                - "happy"
+                - "sad"
+  securitySchemes:
+    basic_auth:
+      type: http
+      scheme: basic
