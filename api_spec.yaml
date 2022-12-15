@@ -138,6 +138,10 @@ components:
               example:
                 - "happy"
                 - "sad"
+        streak:
+          type: integer
+          description: the current streak
+          example: 10
   securitySchemes:
     basic_auth:
       type: http
